@@ -509,3 +509,39 @@ test_get_config() {
 	EOF
     stbt-run "$scratchdir/test.py"
 }
+
+test_match_timed_frame() {
+    cat > "$scratchdir/test.py" <<-EOF
+	with process_all_frames():
+	    wait_for_match('videotestsrc-timed-frame.png', timeout_secs=100)
+	EOF
+    stbt-run --source-pipeline="videotestsrc ! videorate force-fps=50/1 ! \
+        cairotimeoverlay ! ffmpegcolorspace" "$scratchdir/test.py"
+}
+
+test_live_stream_caught_up_after_process_all_frames() {
+    cat > "$scratchdir/test.py" <<-EOF
+	with process_all_frames():
+	    press('10')
+	    wait_for_match('videotestsrc-timed-frame.png', timeout_secs=100)
+
+	wait_for_match('videotestsrc-bottom-left-corner.png', timeout_secs=100)
+	EOF
+    stbt-run --source-pipeline="videotestsrc ! videorate force-fps=50/1 ! \
+        cairotimeoverlay ! ffmpegcolorspace" "$scratchdir/test.py"
+}
+
+test_match_consecutive_timed_frames_in_leaky_mode() {
+    cat > "$scratchdir/test.py" <<-EOF
+	try:
+	    wait_for_match('videotestsrc-timed-frame.png', timeout_secs=100)
+	    wait_for_match('videotestsrc-timed-frame-2.png', timeout_secs=100)
+	    wait_for_match('videotestsrc-timed-frame-3.png', timeout_secs=100)
+	except MatchTimeout:
+	   pass
+	else:
+	   raise
+	EOF
+    stbt-run --source-pipeline="videotestsrc ! videorate force-fps=50/1 ! \
+        cairotimeoverlay ! ffmpegcolorspace" "$scratchdir/test.py"
+}
