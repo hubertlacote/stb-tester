@@ -538,9 +538,10 @@ test_match_consecutive_timed_frames_in_leaky_mode() {
 	    wait_for_match('videotestsrc-timed-frame-2.png', timeout_secs=100)
 	    wait_for_match('videotestsrc-timed-frame-3.png', timeout_secs=100)
 	except MatchTimeout:
-	   pass
+	    pass
 	else:
-	   raise
+	    assert False, ("All frames were processed without",
+	                   "stbt.process_all_frames")
 	EOF
     stbt-run --source-pipeline="videotestsrc ! videorate force-fps=50/1 ! \
         cairotimeoverlay ! ffmpegcolorspace" "$scratchdir/test.py"
