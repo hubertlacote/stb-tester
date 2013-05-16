@@ -508,7 +508,7 @@ class Display:
         pipe = " ".join([
             "tee name=up_t",
             "up_t. ! appsink name=upstream_screenshot "
-                            "max-buffers=1 drop=true sync=false",
+            "max-buffers=1 drop=true sync=false",
             "up_t. ! ",
             imageprocessing,
             "! tee name=t",
@@ -580,20 +580,20 @@ class Display:
     def save_config(self):
         self.last_config['queue.leaky'] = self.queue.props.leaky
         self.last_config['queue.max_size_buffers'] = \
-                                            self.queue.props.max_size_buffers
+            self.queue.props.max_size_buffers
         self.last_config['queue.max_size_time'] = \
-                                            self.queue.props.max_size_time
+            self.queue.props.max_size_time
         self.last_config['queue.max_size_bytes'] = \
-                                            self.queue.props.max_size_bytes
+            self.queue.props.max_size_bytes
 
     def restore_last_saved_config(self):
         self.queue.props.leaky = self.last_config['queue.leaky']
         self.queue.props.max_size_buffers = \
-                                    self.last_config['queue.max_size_buffers']
+            self.last_config['queue.max_size_buffers']
         self.queue.props.max_size_time = \
-                                    self.last_config['queue.max_size_time']
+            self.last_config['queue.max_size_time']
         self.queue.props.max_size_bytes = \
-                                    self.last_config['queue.max_size_bytes']
+            self.last_config['queue.max_size_bytes']
 
     @contextmanager
     def process_all_frames(self):
@@ -754,8 +754,8 @@ class Display:
         self.pipeline.set_state(gst.STATE_PLAYING)
         self.start_timestamp = None
 
-        while gst.STATE_PLAYING != self.sink_bin.get_state()[1] or \
-              gst.STATE_PLAYING != self.pipeline.get_state()[1]:
+        while self.sink_bin.get_state()[1] != gst.STATE_PLAYING or \
+                self.pipeline.get_state()[1] != gst.STATE_PLAYING:
             time.sleep(0.01)
 
         debug("Restarted source pipeline")
