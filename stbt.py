@@ -611,7 +611,8 @@ class Display:
         self.restore_last_saved_config()
         self.underrun_handler_id = self.queue.connect("underrun",
                                                       self.on_underrun)
-        self.restart_source_bin()
+        while self.queue.get_property('current-level-buffers') > 1:
+            time.sleep(0.01)
 
     def detect(self, element_name, params, timeout_secs):
         """Generator that yields the messages emitted by the named gstreamer
@@ -755,7 +756,7 @@ class Display:
 
         while gst.STATE_PLAYING != self.sink_bin.get_state()[1] or \
               gst.STATE_PLAYING != self.pipeline.get_state()[1]:
-            time.sleep(0.1)
+            time.sleep(0.01)
 
         debug("Restarted source pipeline")
 
