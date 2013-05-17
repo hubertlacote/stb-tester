@@ -515,8 +515,9 @@ test_match_timed_frame() {
 	with process_all_frames():
 	    wait_for_match('videotestsrc-timed-frame.png', timeout_secs=2)
 	EOF
-    stbt-run --source-pipeline="videotestsrc is-live=true ! videorate force-fps=50/1 ! \
-        cairotimeoverlay ! ffmpegcolorspace" "$scratchdir/test.py"
+    stbt-run --source-pipeline="videotestsrc is-live=true ! \
+        videorate force-fps=50/1 ! cairotimeoverlay ! ffmpegcolorspace" \
+           "$scratchdir/test.py"
 }
 
 test_live_stream_caught_up_after_process_all_frames() {
@@ -526,8 +527,9 @@ test_live_stream_caught_up_after_process_all_frames() {
 	    press('10')
 	wait_for_match('videotestsrc-bottom-left-corner.png', timeout_secs=10)
 	EOF
-    stbt-run --source-pipeline="videotestsrc is-live=true ! videorate force-fps=50/1 ! \
-        cairotimeoverlay ! ffmpegcolorspace" "$scratchdir/test.py"
+    stbt-run --source-pipeline="videotestsrc is-live=true ! \
+        videorate force-fps=50/1 ! cairotimeoverlay ! ffmpegcolorspace" \
+        "$scratchdir/test.py"
 }
 
 test_match_consecutive_timed_frames_in_leaky_mode() {
