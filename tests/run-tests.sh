@@ -124,9 +124,8 @@ if [ $# -eq 0 ]; then
     run test_precondition_script &&
     run test_get_frame_and_save_frame &&
     run test_get_config &&
-    run test_match_timed_frame &&
+    run test_match_frame_after_user_action &&
     run test_live_stream_caught_up_after_process_all_frames &&
-    run test_match_consecutive_timed_frames_in_leaky_mode &&
 
     echo "Testing stbt-record:" &&
     run test_record &&
