@@ -533,15 +533,17 @@ test_live_stream_caught_up_after_process_all_frames() {
 test_match_consecutive_timed_frames_in_leaky_mode() {
     cat > "$scratchdir/test.py" <<-EOF
 	try:
-	    wait_for_match('videotestsrc-timed-frame.png', timeout_secs=3)
-	    wait_for_match('videotestsrc-timed-frame-2.png', timeout_secs=1)
-	    wait_for_match('videotestsrc-timed-frame-3.png', timeout_secs=1)
+	    wait_for_match('videotestsrc-timed-frame-200fps-1.png', timeout_secs=5)
+	    wait_for_match('videotestsrc-timed-frame-200fps-2.png', timeout_secs=1)
+	    wait_for_match('videotestsrc-timed-frame-200fps-3.png', timeout_secs=1)
 	except MatchTimeout:
 	    pass
 	else:
 	    assert False, ("All frames were processed without",
 	                   "stbt.process_all_frames")
 	EOF
-    stbt-run --source-pipeline="videotestsrc is-live=true ! videorate force-fps=50/1 ! \
-        cairotimeoverlay ! ffmpegcolorspace" "$scratchdir/test.py"
+    stbt-run --source-pipeline="videotestsrc is-live=true ! \
+        videorate force-fps=50/1 ! cairotimeoverlay ! ffmpegcolorspace" \
+        --sink-pipeline="ximagesink sync=false max-lateness=1000000" \
+        "$scratchdir/test.py"
 }
